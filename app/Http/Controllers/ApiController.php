@@ -15,6 +15,17 @@ class ApiController extends Controller {
     |
     */
 
+    /**
+     * @Get("/v1/heartbeat")
+     */
+    public function getHeartbeat()
+    {
+        $aryReturn = [
+            "status" => 200
+        ]
+        return Response::json($aryReturn);
+    }
+
 
     /**
      * @Get("/v1/overview")
