@@ -2,6 +2,7 @@
 
 use Illuminate\Routing\Controller;
 use App\Models\Location;
+use App\Models\LocationData;
 use Illuminate\Support\Facades\Response;
 
 class ApiController extends Controller {
@@ -16,11 +17,25 @@ class ApiController extends Controller {
 
 
     /**
+     * @Get("/v1/overview")
+     */
+    public function getOverview()
+    {
+        $aryReturn = [];
+        foreach (Location::all() as $objLocation)
+        {
+            $objLocationData = LocationData::whereRaw('location_id = ?', array($objLocation->location_id))->orderBy('created_at', 'desc')->take(1)->get();
+            $aryReturn[] = ["meta" => $objLocation, "data" => $objLocationData[0]];
+        }
+        return Response::json($aryReturn);
+    }
+
+
+    /**
      * @Get("/v1/locations")
      */
     public function getLocations()
     {
-        // http://led-api.dev:8000/v1/locations
         return Response::json(Location::all());
     }
 
@@ -30,11 +45,7 @@ class ApiController extends Controller {
      */
     public function getLocationByWoeid($woeid)
     {
-        /*
-         * http://led-api.dev:8000/v1/locations/24875484
-         * SELECT lid,name,image_url FROM data_parking.statistic_parking_locations WHERE woeid = 'woeid' ORDER BY name
-         */
-        return Response::json(Location::where(array("woeid", "=", $woeid)));
+        return Response::json(Location::where("woeid", "=", $woeid)->get());
     }
 
 
@@ -43,23 +54,6 @@ class ApiController extends Controller {
      */
     public function getDataForLocationById($woeid, $location_id)
     {
-        /*
-         * http://led-api.dev:8000/v1/locations/24875484/C07311
-         *
-         * SELECT city,name,image_url FROM data_parking.statistic_parking_locations WHERE lid = 'id' LIMIT 1
-         *   "status" => 200,
-         *   "generated" => date("r"),
-         *   "name" => stripslashes($name),
-         *   "image" => stripslashes(stripslashes($image_url)),
-         *   "updated" => $timestamp,
-         *   "age" => $age = time()-$timestamp,
-         *   "state" => stripslashes($state),
-         *   "capacity" => $capacity,
-         *   "used" => $used,
-         *   "free_00" => $free_00,
-         *   "free_30" => $free_30,
-         *   "free_60" => $free_60
-         *
-        */
+        return Response::json(LocationData::whereRaw('location_id = ?', array($location_id))->orderBy('created_at', 'desc')->take(1)->get());
     }
 }
