@@ -39,7 +39,7 @@ return [
 	|
 	*/
 
-	'timezone' => 'UTC',
+	'timezone' => 'Europe/London',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -100,6 +100,7 @@ return [
 		 */
 		'App\Providers\EventServiceProvider',
 		'App\Providers\RouteServiceProvider',
+		'App\Providers\ArtisanServiceProvider',
 
 		/*
 		 * Laravel Framework Service Providers...
