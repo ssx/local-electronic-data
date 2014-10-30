@@ -1,6 +1,7 @@
 <?php namespace App\Console\Commands;
 
-use App\Models\ParkingDataModel;
+use App\Models\Location;
+use App\Models\LocationData;
 use Illuminate\Console\Command;
 use Maknz\Slack\Facades\Slack as Slack;
 
@@ -76,10 +77,10 @@ class ParkingUpdateCommand extends Command {
             {
                 Slack::send("Processing known car park: ".$location_id);
 
-                $intCount = ParkingDataModel::where("location_id", "=", $location_id)->where("timestamp", "=", $timestamp)->count();
+                $intCount = LocationData::where("location_id", "=", $location_id)->where("timestamp", "=", $timestamp)->count();
                 if ($intCount == 0)
                 {
-                    $ParkingData                    = new ParkingDataModel();
+                    $ParkingData                    = new LocationData();
                     $ParkingData->location_id       = $location_id;
                     $ParkingData->timestamp         = $timestamp;
                     $ParkingData->collection_date   = date("Y-m-d", $timestamp);
