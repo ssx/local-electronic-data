@@ -101,6 +101,7 @@ return [
 		'App\Providers\EventServiceProvider',
 		'App\Providers\RouteServiceProvider',
 		'App\Providers\ArtisanServiceProvider',
+		'Maknz\Slack\SlackServiceProvider',
 
 		/*
 		 * Laravel Framework Service Providers...
@@ -185,6 +186,7 @@ return [
 		'Validator' => 'Illuminate\Support\Facades\Validator',
 		'View'      => 'Illuminate\Support\Facades\View',
 
+		'Slack' => 'Maknz\Slack\Facades\Slack',
 	],
 
 ];

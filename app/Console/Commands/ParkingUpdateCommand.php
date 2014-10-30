@@ -106,7 +106,7 @@ class ParkingUpdateCommand extends Command {
             $x++;
         }
 
-        \Slack::send("End of update cycle.");
+        Slack::send("End of update cycle.");
     }
 
 	/**
