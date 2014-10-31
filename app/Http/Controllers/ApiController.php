@@ -22,7 +22,7 @@ class ApiController extends Controller {
     {
         $aryReturn = [
             "status" => 200
-        ]
+        ];
         return Response::json($aryReturn);
     }
 
