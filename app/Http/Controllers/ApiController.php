@@ -28,19 +28,24 @@ class ApiController extends Controller {
 
 
     /**
-     * @Get("/v1/overview")
+     * @Get("/v1/overview/{woeid}", as="woeid")
      */
-    public function getOverview()
+    public function getOverview($woeid)
     {
         $aryReturn = [];
-        foreach (Location::all() as $objLocation)
-        {
-            $objLocationData = LocationData::whereRaw('location_id = ?', array($objLocation->location_id))->orderBy('created_at', 'desc')->take(1)->get();
-            if (isset($objLocationData[0]))
-            {
-                $aryReturn[] = ["meta" => $objLocation, "data" => $objLocationData[0]];
+
+        $objWoeidRecords = Location::whereRaw('woeid = ?', array("woeid" => $woeid));
+
+        if ($objWoeidRecords->count() > 0) {
+            foreach ($objWoeidRecords->get() as $objLocation) {
+                $objLocationData = LocationData::whereRaw('location_id = ?',
+                    array($objLocation->location_id))->orderBy('created_at', 'desc')->take(1)->get();
+                if (isset($objLocationData[0])) {
+                    $aryReturn[] = ["meta" => $objLocation, "data" => $objLocationData[0]];
+                }
             }
         }
+
         return Response::json($aryReturn);
     }
 
