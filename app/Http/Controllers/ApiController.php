@@ -36,7 +36,10 @@ class ApiController extends Controller {
         foreach (Location::all() as $objLocation)
         {
             $objLocationData = LocationData::whereRaw('location_id = ?', array($objLocation->location_id))->orderBy('created_at', 'desc')->take(1)->get();
-            $aryReturn[] = ["meta" => $objLocation, "data" => $objLocationData[0]];
+            if (isset($objLocationData[0]))
+            {
+                $aryReturn[] = ["meta" => $objLocation, "data" => $objLocationData[0]];
+            }
         }
         return Response::json($aryReturn);
     }
