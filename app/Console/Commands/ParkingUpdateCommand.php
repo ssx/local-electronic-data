@@ -57,6 +57,9 @@ class ParkingUpdateCommand extends Command {
             $free_30        = (int)$matches[7][$x];
             $free_60        = (int)$matches[8][$x];
             $timestamp      = strtotime(str_replace("/", "-", $matches[9][$x]));
+
+            $this->info("Timestamp: ".$timestamp.", translated: ".date("r", $timestamp));
+
             $used           = $capacity - $free_00;
 
             // Check state of this caching
@@ -73,7 +76,7 @@ class ParkingUpdateCommand extends Command {
             // Test to see whether we have any data
             if (isset($objName[0]->name))
             {
-//                Slack::send("Processing known car park: ".$location_id);
+                $this->info("Processing known car park: ".$location_id);
 
                 $intCount = LocationData::where("location_id", "=", $location_id)->where("timestamp", "=", $timestamp)->count();
                 if ($intCount == 0)
@@ -91,21 +94,21 @@ class ParkingUpdateCommand extends Command {
                     $ParkingData->free_60           = $free_60;
                     $ParkingData->save();
 
-//                    Slack::send("Success: Added new ParkingData: ".$ParkingData->id);
+                    $this->info("Success: Added new ParkingData: ".$ParkingData->id);
                 } else
                 {
-//                    Slack::send("Error: Record already exists");
+                    $this->error("Error: Record already exists");
                 }
             } else
             {
-//                Slack::send("Error: Unknown car park found: ".$location_id);
+                $this->error("Error: Unknown car park found: ".$location_id);
             }
 
             // Move on to the next car park
             $x++;
         }
-//
-//        Slack::send("End of update cycle.");
+
+        $this->info("End of update cycle.");
     }
 
 	/**
