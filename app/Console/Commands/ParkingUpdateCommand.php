@@ -38,8 +38,6 @@ class ParkingUpdateCommand extends Command {
 	 */
 	public function fire()
     {
-        Slack::send("Running parking data update cycle");
-
         $stuff = file_get_contents('http://southampton.romanse.org.uk/emerge/carparks.asp');
         $needles = array('/\r/s', '/\n/s', '/<!-- display a warning that prediction data is not available -->/si', '/&nbsp;/s', '/\t/s', '/<td class="InfoData"><\/td>/si');
         $reps = array('', '', '', '0', '', '<td class="InfoData">0</td>');
@@ -75,7 +73,7 @@ class ParkingUpdateCommand extends Command {
             // Test to see whether we have any data
             if (isset($objName[0]->name))
             {
-                Slack::send("Processing known car park: ".$location_id);
+//                Slack::send("Processing known car park: ".$location_id);
 
                 $intCount = LocationData::where("location_id", "=", $location_id)->where("timestamp", "=", $timestamp)->count();
                 if ($intCount == 0)
@@ -93,21 +91,21 @@ class ParkingUpdateCommand extends Command {
                     $ParkingData->free_60           = $free_60;
                     $ParkingData->save();
 
-                    Slack::send("Success: Added new ParkingData: ".$ParkingData->id);
+//                    Slack::send("Success: Added new ParkingData: ".$ParkingData->id);
                 } else
                 {
-                    Slack::send("Error: Record already exists");
+//                    Slack::send("Error: Record already exists");
                 }
             } else
             {
-                Slack::send("Error: Unknown car park found: ".$location_id);
+//                Slack::send("Error: Unknown car park found: ".$location_id);
             }
 
             // Move on to the next car park
             $x++;
         }
-
-        Slack::send("End of update cycle.");
+//
+//        Slack::send("End of update cycle.");
     }
 
 	/**
