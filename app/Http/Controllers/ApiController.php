@@ -38,8 +38,7 @@ class ApiController extends Controller {
 
         if ($objWoeidRecords->count() > 0) {
             foreach ($objWoeidRecords->get() as $objLocation) {
-                $objLocationData = LocationData::whereRaw('location_id = ?',
-                    array($objLocation->location_id))->orderBy('created_at', 'desc')->take(1)->get();
+                $objLocationData = LocationData::whereRaw('location_id = ? AND YEAR(collection_date) = '.date("Y"), array($objLocation->location_id))->orderBy('created_at', 'desc')->take(1)->get();
                 if (isset($objLocationData[0])) {
                     $aryReturn[] = ["meta" => $objLocation, "data" => $objLocationData[0]];
                 }
