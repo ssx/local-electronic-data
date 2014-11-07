@@ -3,6 +3,7 @@
 use Illuminate\Routing\Controller;
 use App\Models\Location;
 use App\Models\LocationData;
+use App\Models\Overview;
 use Illuminate\Support\Facades\Response;
 
 class ApiController extends Controller {
@@ -34,17 +35,15 @@ class ApiController extends Controller {
     {
         $aryReturn = [];
 
-        $objWoeidRecords = Location::whereRaw('woeid = ?', array("woeid" => $woeid));
-
-        if ($objWoeidRecords->count() > 0) {
-            foreach ($objWoeidRecords->get() as $objLocation) {
-                $objLocationData = LocationData::whereRaw('location_id = ? AND YEAR(collection_date) = '.date("Y"), array($objLocation->location_id))->orderBy('created_at', 'desc')->take(1)->get();
-                if (isset($objLocationData[0])) {
-                    $aryReturn[] = ["meta" => $objLocation, "data" => $objLocationData[0]];
-                }
+        $Overviews = Overview::whereRaw('woeid = ?', array("woeid" => $woeid));
+        if ($Overviews->count() > 0)
+        {
+            foreach ($Overviews->get() as $LocationOverview)
+            {
+                $aryReturn[] = $LocationOverview;
             }
         }
-
+        
         return Response::json($aryReturn);
     }
 
