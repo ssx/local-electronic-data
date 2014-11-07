@@ -2,6 +2,7 @@
 
 use App\Models\Location;
 use App\Models\LocationData;
+use App\Models\Overview;
 use Illuminate\Console\Command;
 use Maknz\Slack\Facades\Slack as Slack;
 
@@ -71,7 +72,7 @@ class ParkingUpdateCommand extends Command {
             }
 
             // Firstly, check to see that we know this car park
-            $objName = \DB::select("SELECT name FROM parking_locations WHERE location_id = ? LIMIT 1", array($location_id));
+            $objName = \DB::select("SELECT * FROM parking_locations WHERE location_id = ? LIMIT 1", array($location_id));
 
             // Test to see whether we have any data
             if (isset($objName[0]->name))
@@ -81,6 +82,7 @@ class ParkingUpdateCommand extends Command {
                 $intCount = LocationData::where("location_id", "=", $location_id)->where("timestamp", "=", $timestamp)->count();
                 if ($intCount == 0)
                 {
+                    // Add an historical record
                     $ParkingData                    = new LocationData();
                     $ParkingData->location_id       = $location_id;
                     $ParkingData->timestamp         = $timestamp;
@@ -95,6 +97,28 @@ class ParkingUpdateCommand extends Command {
                     $ParkingData->save();
 
                     $this->info("Success: Added new ParkingData: ".$ParkingData->id);
+
+                    // Add an overview record or replace the one thats there
+                    $OverviewEntry = Overview::firstOrNew(array("identifier" => $objName[0]->woeid."_".$ParkingData->location_id));
+                    $OverviewEntry->location_id     = $objName[0]->location_id;
+                    $OverviewEntry->woeid           = $objName[0]->woeid;
+                    $OverviewEntry->city            = $objName[0]->city;
+                    $OverviewEntry->name            = $objName[0]->name;
+                    $OverviewEntry->image_url       = $objName[0]->image_url;
+                    $OverviewEntry->created_at      = $ParkingData->created_at;
+                    $OverviewEntry->updated_at      = $ParkingData->updated_at;
+                    $OverviewEntry->timestamp       = $ParkingData->timestamp;
+                    $OverviewEntry->collection_date = $ParkingData->collection_date;
+                    $OverviewEntry->collection_time = $ParkingData->collection_time;
+                    $OverviewEntry->state           = $ParkingData->state;
+                    $OverviewEntry->capacity        = $ParkingData->capacity;
+                    $OverviewEntry->used            = $ParkingData->used;
+                    $OverviewEntry->free_00         = $ParkingData->free_00;
+                    $OverviewEntry->free_30         = $ParkingData->free_30;
+                    $OverviewEntry->free_60         = $ParkingData->free_60;
+                    $OverviewEntry->save();
+
+                    $this->info("Success: Updated OverviewEntry: ".$objName[0]->woeid."_".$ParkingData->location_id);
                 } else
                 {
                     $this->error("Error: Record already exists");
