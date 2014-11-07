@@ -35,7 +35,7 @@ class ApiController extends Controller {
     {
         $aryReturn = [];
 
-        $Overviews = Overview::whereRaw('woeid = ?', array("woeid" => $woeid));
+        $Overviews = Overview::whereRaw('woeid = ?', array("woeid" => $woeid))->orderBy("free_00", "DESC");
         if ($Overviews->count() > 0)
         {
             foreach ($Overviews->get() as $LocationOverview)
@@ -43,7 +43,7 @@ class ApiController extends Controller {
                 $aryReturn[] = $LocationOverview;
             }
         }
-        
+
         return Response::json($aryReturn);
     }
 
