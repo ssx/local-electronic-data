@@ -33,8 +33,10 @@ class ApiController extends Controller {
      */
     public function getOverview($woeid)
     {
+        // Create an array to store our response
         $aryReturn = [];
 
+        // Get all the overview records for the given woeid
         $Overviews = Overview::whereRaw('woeid = ?', array("woeid" => $woeid))->orderBy("free_00", "DESC");
         if ($Overviews->count() > 0)
         {
@@ -44,6 +46,7 @@ class ApiController extends Controller {
             }
         }
 
+        // Return the response as a JSON array
         return Response::json($aryReturn);
     }
 
