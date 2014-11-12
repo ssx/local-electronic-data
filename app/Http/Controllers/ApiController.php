@@ -33,6 +33,17 @@ class ApiController extends Controller {
      */
     public function getOverview($woeid)
     {
+        // While we're in development we'll send a notification to say the API has been used
+        $objPushyApp = new \Pushy\Client(getenv("PUSHOVER_KEY_APP"));
+        $objPushyUser = new \Pushy\User(getenv("PUSHOVER_KEY_USER"));
+        $objPushyMessage = (new \Pushy\Message)
+            ->setMessage("User Agent: ".$_SERVER["HTTP_USER_AGENT"])
+            ->setTitle("API Request: ".$_SERVER["REMOTE_ADDR"])
+            ->setUser($objPushyUser);
+
+        // Send notification
+        $objPushyApp->sendMessage($objPushyMessage);
+
         // Create an array to store our response
         $aryReturn = [];
 
