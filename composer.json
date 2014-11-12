@@ -6,7 +6,8 @@
 	"type": "project",
 	"require": {
 		"laravel/framework": "~5.0",
-		"maknz/slack": "0.2.1"
+		"maknz/slack": "0.2.1",
+		"sqmk/pushy": "dev-master"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "~4.0"
