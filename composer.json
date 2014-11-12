@@ -7,7 +7,8 @@
 	"require": {
 		"laravel/framework": "~5.0",
 		"maknz/slack": "0.2.1",
-		"sqmk/pushy": "dev-master"
+		"sqmk/pushy": "dev-master",
+		"tedivm/stash": "0.12.*"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "~4.0"
