@@ -33,8 +33,12 @@ class ApiController extends Controller {
      */
     public function getClientInfo()
     {
-         echo var_dump($_SERVER);
-         exit();
+        
+
+        $aryReturn = [
+            "server" => $_SERVER["SERVER_ADDR"]
+        ];
+        return Response::json($aryReturn);
     }    
 
     /**
