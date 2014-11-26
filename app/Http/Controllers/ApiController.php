@@ -29,6 +29,15 @@ class ApiController extends Controller {
 
 
     /**
+     * @Get("/v1/_client")
+     */
+    public function getHeartbeat()
+    {
+         echo var_dump($_SERVER);
+         exit();
+    }    
+
+    /**
      * @Get("/v1/overview/{woeid}", as="woeid")
      */
     public function getOverview($woeid)
