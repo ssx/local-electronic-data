@@ -33,10 +33,9 @@ class ApiController extends Controller {
      */
     public function getClientInfo()
     {
-        
-
         $aryReturn = [
-            "server" => $_SERVER["SERVER_ADDR"]
+            "server"    =>  $_SERVER["SERVER_ADDR"],
+            "client"    =>  $_SERVER["REMOTE_ADDR"]
         ];
         return Response::json($aryReturn);
     }    
