@@ -31,3 +31,7 @@
 - name: More Configure the timezone
   sudo: yes
   file: src=/usr/share/zoneinfo/{{timezone}} dest=/etc/localtime state=link force=yes backup=yes
+
+- name: Add UTF8 Language Pack
+  shell: locale-gen en_GB.UTF-8
+  sudo: yes
